@@ -4,6 +4,7 @@ import com.pokedex.domain.user.User;
 import com.pokedex.domain.user.UserPokemon;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
     boolean register(User user);
@@ -12,11 +13,11 @@ public interface UserService {
 
     List<UserPokemon>  getAllCaughtPokemon();
 
-    boolean addCaughtPokemon(List<String> pokemonList);
+    Set<Long> addCaughtPokemon(List<String> pokemonList);
 
     boolean updateCaughtPokemonStatus(Long userPokemonId, Integer attack, Integer defense, Integer stamina);
 
-    boolean removeCaughtPokemon(List<Long> userPokemonIdList);
+    Set<Long> removeCaughtPokemon(List<Long> userPokemonIdList);
 
     boolean logout();
 }

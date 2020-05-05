@@ -1,8 +1,17 @@
 package com.pokedex.bootstrap;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.pokedex.domain.Pokemon;
 import com.pokedex.repositories.PokedexRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class BootStrapData implements CommandLineRunner {
@@ -17,30 +26,11 @@ public class BootStrapData implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         System.out.println("Loading Pokemon Data");
-/*
-        Pokemon pokemon = new Pokemon();
-        pokemon.setDex(1L);
-        pokemon.setName("Pikachu");
 
-        List<Double> animationTimeList = new ArrayList<>();
-        animationTimeList.add(1.25);
-        pokemon.setAnimationTime(animationTimeList);
+        BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/data_pokemon.json")));
+        List<Pokemon> pokemonList = new Gson().fromJson(br, new TypeToken<List<Pokemon>>(){}.getType());
+        pokedexRepository.saveAll(pokemonList);
 
-        BuddySize buddySize = new BuddySize();
-        buddySize.setId("medium");
-        buddySize.setName("BUDDY_MEDIUM");
-        pokemon.setBuddySize(buddySize);
-
-        *//*List<CinematicMoves> cinematicMovesList = new ArrayList<>();
-        CinematicMoves cm = new CinematicMoves();
-        cm.setId("Sludge Bomb");
-        cm.setName("SLUDGE_BOMB");
-        cinematicMovesList.add(cm);
-        pokemon.setCinematicMoves(cinematicMovesList);*//*
-
-        pokedexRepository.save(pokemon);
-
-        System.out.println("Pokemon saved: " + pokedexRepository.count());*/
-
+        System.out.println("Total Pokemon data in Pokedex: " + pokedexRepository.count());
     }
 }

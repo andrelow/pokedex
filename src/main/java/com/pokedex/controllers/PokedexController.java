@@ -1,9 +1,11 @@
 package com.pokedex.controllers;
 
+import com.pokedex.datamodel.PokemonAndStatsDTO;
+import com.pokedex.datamodel.PokemonAndTypesDTO;
+import com.pokedex.datamodel.PokemonNameAndDexDTO;
 import com.pokedex.datamodel.ResponseSpec;
 import com.pokedex.domain.Pokemon;
 import com.pokedex.domain.PokemonType;
-import com.pokedex.domain.Types;
 import com.pokedex.services.PokedexService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -43,47 +45,40 @@ public class PokedexController {
     }
 
     @GetMapping("/findByType")
-    public List<Pokemon> getPokemonByType(@RequestParam String type1, @RequestParam(required = false) String type2) {
-        Types firstType = new Types();
-        if (type1 != null) {
-            System.out.println(type1);
+    public List<PokemonNameAndDexDTO> getPokemonByType(@RequestParam String type1, @RequestParam(required = false) String type2) {
+        String firstTypeId = type1 != null ? PokemonType.get(type1) : null;
+        String secondTypeId = type2 != null ? PokemonType.get(type2) : null;
 
-            firstType.setName(type1);
-            firstType.setId(PokemonType.get(type1));
-        } else {
-            return null;
-        }
-
-        Types secondType = new Types();
-        if (type2 != null) {
-            secondType.setName(type2);
-            secondType.setId(PokemonType.get(type2));
-        } else {
-            return pokedexService.findPokemonListByOneType(firstType);
-        }
-
-        return pokedexService.findPokemonListByTwoTypes(firstType, secondType);
+        return pokedexService.findPokemonListByTwoTypes(firstTypeId, secondTypeId);
     }
 
-    @GetMapping("/findByStats")
-    public List<Pokemon> getPokemonByStats(@RequestParam(required = false) Integer baseAttack,
-                                           @RequestParam(required = false) Integer baseDefense,
-                                           @RequestParam(required = false) Integer baseStamina) {
-        return pokedexService.findPokemonListByStatus(baseAttack, baseDefense, baseStamina);
+    @GetMapping("/findByStatsGreaterThan")
+    public List<PokemonAndStatsDTO> getPokemonByStatsGreaterThan(@RequestParam(required = false) Integer baseAttack,
+                                                                 @RequestParam(required = false) Integer baseDefense,
+                                                                 @RequestParam(required = false) Integer baseStamina) {
+        return pokedexService.findPokemonListByStatusGreatherThan(baseAttack, baseDefense, baseStamina);
     }
 
-    @GetMapping("/findSorted")
-    public List<Pokemon> findAllPokemonSortByTypes(@RequestParam(required = false) String sortCriteria) {
-        List<Pokemon> pokemonList;
-        switch (sortCriteria) {
-            case "types":
-                pokemonList = pokedexService.findAllPokemonSortByTypes();
-                break;
-            default:
-                pokemonList = pokedexService.findAllPokemonSortByStats(sortCriteria);
-        }
+    @GetMapping("/findByStatsLessThan")
+    public List<PokemonAndStatsDTO> getPokemonByStatsLessThan(@RequestParam(required = false) Integer baseAttack,
+                                                              @RequestParam(required = false) Integer baseDefense,
+                                                              @RequestParam(required = false) Integer baseStamina) {
+        return pokedexService.findPokemonListByStatusLessThan(baseAttack, baseDefense, baseStamina);
+    }
 
-        return pokemonList;
+    @GetMapping("/findAllSortByName")
+    public List<PokemonNameAndDexDTO> findAllPokemonSortByName() {
+        return pokedexService.findAllPokemonSortByName();
+    }
+
+    @GetMapping("/findAllSortByTypes")
+    public List<PokemonAndTypesDTO> findAllPokemonSortByTypes() {
+        return pokedexService.findAllPokemonSortByTypes();
+    }
+
+    @GetMapping("/findAllSortByStats")
+    public List<PokemonAndStatsDTO> findAllPokemonSortByStats(@RequestParam(required = false) String sortCriteria) {
+        return pokedexService.findAllPokemonSortByStats(sortCriteria);
     }
 
     @PostMapping("/save")

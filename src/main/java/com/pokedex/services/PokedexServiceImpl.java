@@ -1,14 +1,14 @@
 package com.pokedex.services;
 
+import com.pokedex.datamodel.PokemonAndStatsDTO;
+import com.pokedex.datamodel.PokemonAndTypesDTO;
+import com.pokedex.datamodel.PokemonNameAndDexDTO;
 import com.pokedex.domain.Pokemon;
-import com.pokedex.domain.Types;
 import com.pokedex.repositories.PokedexRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class PokedexServiceImpl implements PokedexService {
@@ -35,48 +35,47 @@ public class PokedexServiceImpl implements PokedexService {
     }
 
     @Override
-    public List<Pokemon> findPokemonListByOneType(Types type) {
-        return pokedexRepository.findAllPokemonByTypes(type);
+    public List<PokemonNameAndDexDTO> findPokemonListByTwoTypes(String firstTypeId, String secondTypeId) {
+        return pokedexRepository.findPokemonIdByTwoTypes(firstTypeId, secondTypeId);
     }
 
     @Override
-    public List<Pokemon> findPokemonListByTwoTypes(Types type1, Types type2) {
-        List<Long> dexIdList = pokedexRepository.findPokemonIdByTwoTypes(type1.getId(), type2.getId());
-        return pokedexRepository.findAllPokemonByDexIn(dexIdList);
+    public List<PokemonAndStatsDTO> findPokemonListByStatusGreatherThan(Integer baseAttack, Integer baseDefense, Integer baseStamina) {
+        return pokedexRepository.findAllPokemonByStatsGreatherThan(baseAttack, baseDefense, baseStamina);
     }
 
     @Override
-    public List<Pokemon> findPokemonListByStatus(Integer baseAttack, Integer baseDefense, Integer baseStamina) {
-        List<Long> dexIdList = pokedexRepository.findAllPokemonByStats(baseAttack, baseDefense, baseStamina);
-        return pokedexRepository.findAllPokemonByDexIn(dexIdList);
+    public List<PokemonAndStatsDTO> findPokemonListByStatusLessThan(Integer baseAttack, Integer baseDefense, Integer baseStamina) {
+        return pokedexRepository.findAllPokemonByStatsLessThan(baseAttack, baseDefense, baseStamina);
     }
 
     @Override
-    public List<Pokemon> findAllPokemonSortByTypes() {
-        List<Long> dexIdList = pokedexRepository.findAllDistinctPokemonByOrderByTypesAsc();
-
-        List<Long> dexIdWithoutDuplicate = getListWithoutDuplicate(dexIdList);
-        return pokedexRepository.findAllPokemonByDexIn(dexIdWithoutDuplicate);
+    public List<PokemonNameAndDexDTO> findAllPokemonSortByName() {
+        return pokedexRepository.findAllPokemonSortByName();
     }
 
     @Override
-    public List<Pokemon> findAllPokemonSortByStats(String sortedBy) {
-        List<Long> dexIdList = new ArrayList<>();
+    public List<PokemonAndTypesDTO> findAllPokemonSortByTypes() {
+        return pokedexRepository.findAllPokemonSortByTypes();
+    }
+
+    @Override
+    public List<PokemonAndStatsDTO> findAllPokemonSortByStats(String sortedBy) {
+        List<PokemonAndStatsDTO> response = new ArrayList<>();
 
         switch(sortedBy) {
             case "attack":
-                dexIdList = pokedexRepository.findAllPokemonOrderByAttackStatsDesc();
+                response = pokedexRepository.findAllPokemonOrderByAttackStatsDesc();
                 break;
             case "defense":
-                dexIdList = pokedexRepository.findAllPokemonOrderByDefenseStatsDesc();
+                response = pokedexRepository.findAllPokemonOrderByDefenseStatsDesc();
                 break;
             case "stamina":
-                dexIdList = pokedexRepository.findAllPokemonOrderByStaminaStatsDesc();
+                response = pokedexRepository.findAllPokemonOrderByStaminaStatsDesc();
                 break;
         }
 
-        List<Long> dexIdWithoutDuplicate = getListWithoutDuplicate(dexIdList);
-        return pokedexRepository.findAllPokemonByDexIn(dexIdWithoutDuplicate);
+        return response;
     }
 
     @Override

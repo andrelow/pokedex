@@ -1,10 +1,11 @@
 package com.pokedex.services;
 
+import com.pokedex.datamodel.PokemonAndStatsDTO;
+import com.pokedex.datamodel.PokemonAndTypesDTO;
+import com.pokedex.datamodel.PokemonNameAndDexDTO;
 import com.pokedex.domain.Pokemon;
-import com.pokedex.domain.Types;
 
 import java.util.List;
-import java.util.Set;
 
 public interface PokedexService {
 
@@ -14,15 +15,17 @@ public interface PokedexService {
 
     List<Pokemon> findAllPokemon();
 
-    List<Pokemon> findPokemonListByOneType(Types type);
+    List<PokemonNameAndDexDTO> findPokemonListByTwoTypes(String firstTypeId, String secondTypeId);
 
-    List<Pokemon> findPokemonListByTwoTypes(Types type1, Types type2);
+    List<PokemonAndStatsDTO> findPokemonListByStatusGreatherThan(Integer baseAttack, Integer baseDefense, Integer baseStamina);
 
-    List<Pokemon> findPokemonListByStatus(Integer baseAttack, Integer baseDefense, Integer baseStamina);
+    List<PokemonAndStatsDTO> findPokemonListByStatusLessThan(Integer baseAttack, Integer baseDefense, Integer baseStamina);
 
-    List<Pokemon> findAllPokemonSortByTypes();
+    List<PokemonNameAndDexDTO> findAllPokemonSortByName();
 
-    List<Pokemon> findAllPokemonSortByStats(String sortedBy);
+    List<PokemonAndTypesDTO> findAllPokemonSortByTypes();
+
+    List<PokemonAndStatsDTO> findAllPokemonSortByStats(String sortedBy);
 
     void savePokemon(Pokemon pokemon);
 

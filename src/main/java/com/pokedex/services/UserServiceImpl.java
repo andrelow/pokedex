@@ -9,7 +9,9 @@ import com.pokedex.repositories.UserPokemonRepository;
 import com.pokedex.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -52,18 +54,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean addCaughtPokemon(List<String> pokemonList) {
+    public Set<Long> addCaughtPokemon(List<String> pokemonList) {
+        Set<Long> addedPokemonDex = new HashSet<>();
         if (activeUser != null) {
             List<Pokemon> caughtPokemon = pokedexRepository.findAllPokemonByNameIn(pokemonList);
 
             for (Pokemon pokemon : caughtPokemon) {
+                addedPokemonDex.add(pokemon.getDex());
                 userPokemonRepository.save(new UserPokemon(pokemon, new UpdatedStats(), activeUser));
             }
-
-            return true;
         }
 
-        return false;
+        return addedPokemonDex;
     }
 
     @Override
@@ -87,21 +89,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean removeCaughtPokemon(List<Long> userPokemonIdList) {
+    public Set<Long> removeCaughtPokemon(List<Long> userPokemonIdList) {
+        Set<Long> removedPokemon = new HashSet<>();
         for (Long userPokemonId : userPokemonIdList) {
             if (userPokemonRepository.findOneByUserAndUserPokemonId(activeUser, userPokemonId) == null) {
                 continue;
             }
-
+            removedPokemon.add(userPokemonId);
             userPokemonRepository.deleteById(userPokemonId);
         }
 
-        return true;
+        return removedPokemon;
     }
 
     @Override
     public boolean logout() {
-        activeUser = null;
+        if (activeUser != null) {
+            activeUser = null;
+            return true;
+        }
         return false;
     }
 }

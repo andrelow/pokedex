@@ -14,7 +14,7 @@ public class Encounter {
     private double baseCaptureRate;
     private double cameraDistance;
     private double collisionRadius;
-    private int dodgeDistance;
+    private double dodgeDistance;
     private double dodgeProbability;
     private double jumpTime;
     private double maxPokemonActionFrequency;
@@ -76,11 +76,11 @@ public class Encounter {
         this.collisionRadius = collisionRadius;
     }
 
-    public int getDodgeDistance() {
+    public double getDodgeDistance() {
         return dodgeDistance;
     }
 
-    public void setDodgeDistance(int dodgeDistance) {
+    public void setDodgeDistance(double dodgeDistance) {
         this.dodgeDistance = dodgeDistance;
     }
 
