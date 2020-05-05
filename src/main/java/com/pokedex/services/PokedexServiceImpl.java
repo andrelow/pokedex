@@ -92,15 +92,4 @@ public class PokedexServiceImpl implements PokedexService {
     public void saveAllPokemon(List<Pokemon> pokemonList) {
         pokedexRepository.saveAll(pokemonList);
     }
-
-    private List<Long> getListWithoutDuplicate(List<Long> itemList) {
-        List<Long> newList = new ArrayList<>();
-        for (Long item : itemList) {
-            if (!newList.contains(item)) {
-                newList.add(item);
-            }
-        }
-
-        return newList;
-    }
 }

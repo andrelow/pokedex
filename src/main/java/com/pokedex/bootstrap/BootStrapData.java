@@ -24,8 +24,9 @@ public class BootStrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-        System.out.println("Loading Pokemon Data");
+        System.out.println();
+        System.out.println("=========================================================================================");
+        System.out.println("Loading Pokemon Data...");
 
         BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/data_pokemon.json")));
         List<Pokemon> pokemonList = new Gson().fromJson(br, new TypeToken<List<Pokemon>>(){}.getType());

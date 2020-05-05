@@ -11,7 +11,7 @@ public interface UserService {
 
     boolean login(String userName, String password);
 
-    List<UserPokemon>  getAllCaughtPokemon();
+    List<UserPokemon> getAllCaughtPokemon();
 
     Set<Long> addCaughtPokemon(List<String> pokemonList);
 
